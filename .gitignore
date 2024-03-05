@@ -1,3 +1,4 @@
-commit.txt
+**/commit.txt
+project.txt
 *.out
 *.wsout
