@@ -1,6 +1,10 @@
 #!/usr/bin/env bats
 
-load './greet.sh'
+setup() {
+    load 'test_helper/common-setup'
+    _common_setup
+    load "${PROJECT_ROOT}/src/greet.sh"
+}
 
 @test "greet function with name" {
   run greet "World"
