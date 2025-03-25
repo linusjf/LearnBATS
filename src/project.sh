@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 
-echo "Welcome to our project!"
+FIRST_RUN_FILE="${PREFIX}/tmp/bats-tutorial-project-ran"
 
-echo "NOT IMPLEMENTED!" >&2
-exit 1
+if [[ ! -e "$FIRST_RUN_FILE" ]]; then
+  echo "Welcome to our project!"
+  touch "$FIRST_RUN_FILE"
+fi
+
+case $1 in
+  start-echo-server)
+    echo "Starting echo server"
+    PORT=2000
+    ncat -l $PORT -k -c 'xargs -n1 echo' 2> /dev/null & # don't keep open this script's stderr
+    echo $! > "${PREFIX}/tmp/project-echo-server.pid"
+    echo "$PORT" >&2
+    ;;
+  stop-echo-server)
+    kill "$(< "${PREFIX}/tmp/project-echo-server.pid")"
+    rm "${PREFIX}/tmp/project-echo-server.pid"
+    ;;
+  *)
+    echo "NOT IMPLEMENTED!" >&2
+    exit 1
+    ;;
+esac

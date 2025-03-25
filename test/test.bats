@@ -1,18 +1,22 @@
-setup() {
-load 'test_helper/bats-support/load'
-    load 'test_helper/bats-assert/load'
 
-    # get the containing directory of this file
-    # use $BATS_TEST_FILENAME instead of ${BASH_SOURCE[0]} or $0,
-    # as those will point to the bats executable's location or the preprocessed file respectively
-    DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
-    # make executables in src/ visible to PATH
-    PATH="$DIR/../src:$PATH"
+setup() {
+    load 'test_helper/common-setup'
+    _common_setup
 }
 
-@test "can run our script" {
-    # notice the missing ./
-    # As we added src/ to $PATH, we can omit the relative path to `src/project.sh`.
-    run project.sh # notice `run`!
-    assert_output 'Welcome to our project!'
+
+@test "Show welcome message on first invocation" {
+    if [[ -e "${PREFIX}/tmp/bats-tutorial-project-ran" ]]; then
+        skip 'The FIRST_RUN_FILE already exists'
+    fi
+
+    run project.sh
+    assert_output --partial 'Welcome to our project!'
+
+    run project.sh
+    refute_output --partial 'Welcome to our project!'
+}
+
+teardown() {
+: # Look Ma! No cleanup!
 }
