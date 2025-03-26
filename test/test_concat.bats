@@ -16,7 +16,28 @@ setup() {
 }
 
 @test "should create file" {
-    run project.sh 'Hello ' 'Baeldung' "${PREFIX}/tmp/output"
+    run concat.sh 'Hello ' 'Baeldung' "${PREFIX}/tmp/output"
 
     assert_exists "${PREFIX}/tmp/output"
+}
+
+@test "should write to file" {
+    run concat.sh 'Hello ' 'Baeldung' "${PREFIX}/tmp/output"
+
+    file_content="$(cat "${PREFIX}/tmp/output")"
+    [ "$file_content" == 'Hello Baeldung' ]
+}
+
+@test "should write logs" {
+    skip "Logs are not implemented yet"
+    run concat.sh 'Hello ' 'Baeldung' "${PREFIX}/tmp/output"
+
+    file_content="$(cat "${PREFIX}/tmp/logs")"
+    [ "$file_content" == 'I logged something' ]
+}
+
+@test "test node version" {
+    run node --version
+
+    assert_output --partial "v23"
 }
