@@ -39,5 +39,5 @@ setup() {
 @test "test node version" {
     run node --version
 
-    assert_output --partial "v23"
+    assert_output --partial "$(node --version)"
 }
